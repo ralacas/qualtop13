@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_invoice_inherit_form" model="ir.ui.view">
+            <field name="name">account.move.inherit.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_mx_edi.view_l10n_mx_edi_invoice_form_inherit" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='l10n_mx_edi_origin']" position="after">
+                    <field name="second_cfdi" filename="second_cfdi_name" attrs="{'readonly': [('state','in', ['open','paid'])]}"/>
+                    <field name="second_cfdi_name" invisible="1" class="oe_inline oe_right"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>
