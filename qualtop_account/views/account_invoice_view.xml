@@ -10,5 +10,17 @@
                     <field name="second_cfdi_name" invisible="1" class="oe_inline oe_right"/>
                 </xpath>
             </field>
-        </record>
+    </record>
+    <!-- Inherit Form View to Modify it -->
+    <record id="view_account_move_form_complement" model="ir.ui.view">
+        <field name="name">account.move.form.complement.view</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_payment_ref']" position="after">
+                <field name="not_sign_complement"/>
+            </xpath>
+
+        </field>
+    </record>
 </odoo>
