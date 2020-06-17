@@ -9,6 +9,7 @@ class AccountMove(models.Model):
                                 attachment=True,
                                 help="Agregue la factura timbrada desde otro sistema")
     second_cfdi_name = fields.Char(copy=False)
+    not_sign_complement = fields.Boolean(string='No timbrar complemento')
 
     def _l10n_mx_edi_retry(self):
         result = super(AccountMove, self)._l10n_mx_edi_retry()
