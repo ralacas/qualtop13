@@ -9,9 +9,25 @@ class AccountMove(models.Model):
                                 attachment=True,
                                 help="Agregue la factura timbrada desde otro sistema")
     second_cfdi_name = fields.Char(copy=False)
-    not_sign_complement = fields.Boolean(string='No timbrar complemento')
+    not_sign_complement = fields.Boolean(string='No timbrar complemento', copy=False)
+    not_sign = fields.Boolean(string='No timbrar', copy=False)
+
+    def _l10n_mx_edi_sign(self):
+        '''Call the sign service with records that can be signed.
+        '''
+        if self.not_sign:
+            return super(AccountMove, self)._l10n_mx_edi_sign()
+        res = super(AccountMove, self)._l10n_mx_edi_sign()
+        return res
+    def button_draft(self):
+        if self.not_sign:
+            return super(AccountMove, self).button_draft()
+        res = super(AccountMove, self).button_draft()
+        return res
 
     def _l10n_mx_edi_retry(self):
+        if self.not_sign:
+            return True
         result = super(AccountMove, self)._l10n_mx_edi_retry()
         att_obj = self.env['ir.attachment']
         for inv in self.filtered('second_cfdi'):

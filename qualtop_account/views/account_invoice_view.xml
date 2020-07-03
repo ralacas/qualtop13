@@ -19,6 +19,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_payment_ref']" position="after">
                 <field name="not_sign_complement"/>
+                <field name="not_sign"/>
             </xpath>
 
         </field>
