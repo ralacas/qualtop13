@@ -20,18 +20,6 @@ class AccountMove(models.Model):
         res = super(AccountMove, self)._l10n_mx_edi_sign()
         return res
 
-    def l10n_mx_edi_update_sat_status(self):
-        if self.not_sign:
-            return
-        res = super(AccountMove, self).l10n_mx_edi_update_sat_status
-        return res
-
-    def button_draft(self):
-        if self.not_sign:
-            return super(AccountMove, self).button_draft()
-        res = super(AccountMove, self).button_draft()
-        return res
-
     def _l10n_mx_edi_retry(self):
         if self.not_sign:
             return True
