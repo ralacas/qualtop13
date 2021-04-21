@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+   <record id="view_move_form_tag_attrs_extend" model="ir.ui.view">
+        <field name="name">account.move.tags.qualtop</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <button name='%(account_invoice_tag_segmentation_wizard_act)d' type='action' string=' Segmentación' states='posted' icon="fa-money" class="oe_highlight"/>
+            </field>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='analytic_tag_ids']" position="replace">
+                <field name="analytic_tag_ids" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_tags" optional="show" widget="many2many_tags" options="{'no_create':True,'no_create_edit':True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_tag_segmentation" model="ir.ui.view">
+        <field name="name">account.analytic.tag.tags.qualtop</field>
+        <field name="model">account.analytic.tag</field>
+        <field name="inherit_id" ref="analytic.account_analytic_tag_form_view"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//field[@name='company_id']" position="after">
+               
+            </xpath> -->
+            <xpath expr="//field[@name='analytic_distribution_ids']" position="after">
+                <separator string="Segmentación" col="2" />
+                <field name="segmentation_tag" />
+                <field name="segmentation_control_ids" readonly="1" attrs="{'invisible':[('segmentation_tag','=',False)]}">
+                    <tree string="Segmentación" editable="bottom">
+                        <field name="account_analytic_id" />
+                        <field name="invoice_id" />
+                        <field name="partner_id" />
+                        <field name="invoice_date" />
+                        <!-- <field name="currency_id" groups="base.group_multi_currency"/> -->
+                        <field name="percentage" sum="Porcentaje"/>
+                        <field name="amount" sum="Total"/>
+                        <field name="total" />
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="last_write_date" />
+                        <field name="last_write_user" />
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="invoice_form_segmentation_tag_control" model="ir.ui.view">
+        <field name="name">account.move.segmentation.tag</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Segmentación" attrs="{'invisible':[('segmentation_control','=',False)]}">
+                    <field name="segmentation_control" invisible="1"/>
+                    <field name="segmentation_control_ids" readonly="1" attrs="{'invisible':[('segmentation_control','=',False)]}">
+                        <tree string="Segmentación" editable="bottom">
+                            <field name="tag_id" />
+                            <field name="account_analytic_id" />
+                            <field name="invoice_date" />
+                            <!-- <field name="currency_id" groups="base.group_multi_currency"/> -->
+                            <field name="percentage" sum="Porcentaje"/>
+                            <field name="amount" sum="Porcentaje"/>
+                            <field name="total" />
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="last_write_date" />
+                            <field name="last_write_user" />
+                        </tree>
+                    </field>
+
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+        
+        <!-- Segmentacion de Facturas y Etiquetas -->
+
+        <record id="account_analytic_tag_segmentation_control_pivot" model="ir.ui.view">
+            <field name="name">account.analytic.tag.segmentation.control.tree</field>
+            <field name="model">account.analytic.tag.segmentation.control</field>
+            <field name="arch" type="xml">
+                <pivot string="Segmentación de Facturas">
+                    <field name="tag_id" type="row"/>
+                    <field name="invoice_id" type="col"/>
+                    <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="account_analytic_tag_segmentation_control_tree" model="ir.ui.view">
+            <field name="name">account.analytic.tag.segmentation.control.tree</field>
+            <field name="model">account.analytic.tag.segmentation.control</field>
+            <field name="arch" type="xml">
+                <tree string="Segmentación de Facturas" create="false" delete="false">
+                    <field name="tag_id"/>
+                    <field name="account_analytic_id" />
+                    <field name="invoice_id"/>
+                    <field name="partner_id" />
+                    <field name="invoice_date"/>
+                    <!-- <field name="currency_id"/> -->
+                    <field name="percentage"/>
+                    <field name="amount"/>
+                    <field name="total"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="last_write_date"/>
+                    <field name="last_write_user"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_analytic_tag_segmentation_control_form" model="ir.ui.view">
+            <field name="name">account.analytic.tag.segmentation.control.form</field>
+            <field name="model">account.analytic.tag.segmentation.control</field>
+            <field name="arch" type="xml">
+                <form string="Segmentación de Facturas" create="false" delete="false">
+                    <sheet>
+                        <group>
+                            <field name="tag_id" readonly="1"/>
+                            <field name="account_analytic_id" />
+                            <field name="invoice_id" readonly="1"/>
+                            <field name="partner_id" />
+                            <field name="invoice_date" readonly="1"/>
+                            <!-- <field name="currency_id" readonly="1"/> -->
+                            <field name="percentage" readonly="1"/>
+                            <field name="amount" readonly="1"/>
+                            <field name="total" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="last_write_date" readonly="1"/>
+                            <field name="last_write_user" readonly="1"/>
+                        </group>
+                    </sheet>
+                    
+                </form>
+            </field>
+        </record>
+
+
+        <record id="account_analytic_tag_segmentation_control_search" model="ir.ui.view">
+            <field name="name">account.analytic.tag.segmentation.control.serch</field>
+            <field name="model">account.analytic.tag.segmentation.control</field>
+            <field name="arch" type="xml">
+                <search string="Segmentación de Facturas">
+                    <field name="tag_id"/>
+                    <field name="invoice_id"/>
+                    <field name="partner_id" />
+                    <field name="account_analytic_id" />
+                    <field name="invoice_date"/>
+                    <field name="currency_id"/>
+                    <field name="percentage"/>
+                    <field name="amount"/>
+                    <field name="total"/>
+                    <field name="company_id"/>
+                    <field name="last_write_date"/>
+                    <field name="last_write_user"/>
+                    <group expand="0" string="Agrupar por">
+                        <filter string="Etiqueta" name="group_tag_id" domain="[]" context="{'group_by': 'tag_id'}"/>
+                        <filter string="Factura" name="group_by_invoice" domain="[]" context="{'group_by': 'invoice_id'}"/>
+                        <filter string="Cliente" name="groupby_partner_id" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Compañia" name="groupby_company_id" domain="[]" context="{'group_by': 'company_id'}"/>
+                        <filter string="Cuenta Analítica" name="groupby_account_analytic_id" domain="[]" context="{'group_by': 'account_analytic_id'}"/>
+                        <filter string="Fecha Factura" name="groupby_date" domain="[]" context="{'group_by': 'invoice_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_analytic_segmentation_control" model="ir.actions.act_window">
+            <field name="name">Análisis de Etiquetas Segmentación</field>
+            <field name="res_model">account.analytic.tag.segmentation.control</field>
+            <field name="view_mode">tree,pivot,form</field>
+            <field name="view_id" ref="account_analytic_tag_segmentation_control_tree"/>
+        </record>
+
+        <menuitem action="action_analytic_segmentation_control"
+                  id="action_analytic_segmentation_control_menu" sequence="20"
+                  parent="account.account_reports_management_menu" />
+
+
+
+</data>
+</odoo>

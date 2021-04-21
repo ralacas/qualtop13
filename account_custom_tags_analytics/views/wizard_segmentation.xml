@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+        <!--  Vistas para Asistente de Liberacion de Forecast -->
+        <record id="view_form_account_analytic_tag_segmentation_wizard" model="ir.ui.view">
+            <field name="name">account.analytic.tag.segmentation.wizard.form</field>
+            <field name="model">account.analytic.tag.segmentation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Asistente de Segmentación de Etiquetas">
+                    <header>
+                        <field name="invoice_id" invisible="1"/>
+                        <field name="segmentation_reedit" invisible="1"/>
+                    </header>
+                    <div class="alert alert-warning" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('segmentation_reedit','=',False)]}">
+                        Modificaciión de la Segmentación <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    </div>
+                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('segmentation_reedit','=',True)]}">
+                        Segmentación de la Factura <field name="invoice_id" readonly="1"/>. <i class="fa fa-cogs" aria-hidden="true"></i>
+                    </div>
+                    <sheet>
+                        <group>
+                            <field name="tag_ids" options="{'no_create':True, 'no_create_edit': True}" widget="many2many_tags" domain="[('segmentation_tag','=',True)]"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="account_analytic_id" required="1" options="{'no_create':True, 'no_create_edit': True}" />
+                            </group>
+                            <group></group>
+                        </group>
+                        <group>
+                            <group string="Distribución">
+                                
+                            </group>
+                            <group string="Ingresos" class="oe_right">
+                                
+                            </group>
+                        </group>
+                        <group >
+                            <field name="segmentation_line_ids" force_save="1" nolabel="1">
+                                <tree string="Distribución" create="false" delete="false" editable="bottom">
+                                    <field name="tag_id" force_save="1" readonly="1"/>
+                                    <field name="percentage" required="1" string="%" force_save="1" sum="Total"/>
+                                    <field name="amount" required="1" force_save="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                            <!-- <group string="Ingresos">
+                                <field name="segmentation_line_result_ids" force_save="1" nolabel="1">
+                                    <tree string="Ingresos" create="false" delete="false" editable="bottom">
+                                        <field name="tag_id" force_save="1" readonly="1"/>
+                                        <field name="amount" required="1"  force_save="1" />
+                                    </tree>
+                                </field>
+                            </group> -->
+                        <group class="oe_right">
+                            <group class="oe_subtotal_footer" >
+                                <field name="subtotal"/>
+                            </group>
+                            <newline/>
+                        </group>
+                    </sheet>
+                    <footer >
+                       <center>
+                            <button name="execute_segmentation" string="Aplicar Segmentación" type="object" icon="fa-cogs" class="oe_highlight" />
+
+                            <button string="Cerrar" special="cancel"  icon="fa-window-close"/>
+                        </center>
+                    </footer>
+                </form>
+                </field>
+            </record>
+
+
+        <!--=================ACCION ASISTENTE==================-->
+
+    <record id="account_invoice_tag_segmentation_wizard_act" model="ir.actions.act_window">
+        <field name="name">Asistente de Segmentación</field>
+        <field name="res_model">account.analytic.tag.segmentation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_custom_tags_analytics.view_form_account_analytic_tag_segmentation_wizard"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">form</field>
+    </record>
+</data>
+</odoo>
