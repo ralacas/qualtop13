@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+account_analytic_tag_segmentation_control_access,account.analytic.tag.segmentation.control,model_account_analytic_tag_segmentation_control,,1,1,1,1
+account_analytic_tag_segmentation_wizard_line_access,account.analytic.tag.segmentation.wizard.line,model_account_analytic_tag_segmentation_wizard_line,,1,1,1,1
+account_analytic_tag_segmentation_wizard_access,account.analytic.tag.segmentation.wizard,model_account_analytic_tag_segmentation_wizard,,1,1,1,1
