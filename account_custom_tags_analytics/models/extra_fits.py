@@ -16,6 +16,9 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError, ValidationError
 from odoo import api, fields, models, _
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 #### Etiquetas Analiticas ####
 
@@ -253,6 +256,8 @@ class AccountAnalyticTagSegmentationWizard(models.TransientModel):
             raise UserError("El Porcentaje asignado supera el 100%")
         if amount_percentage < 100.0:
             raise UserError("El Porcentaje asignado debe ser del 100%")
+        _logger.info("\n######### amount_sum >>>>>>>>> %s" % amount_sum)
+        _logger.info("\n######### invoice_subtotal >>>>>>>>> %s" % invoice_subtotal)
         if amount_sum > invoice_subtotal:
             raise UserError("El monto asignado supera el Subtotal de la Factura %s" % invoice_subtotal)
         for line in self.segmentation_line_ids:
