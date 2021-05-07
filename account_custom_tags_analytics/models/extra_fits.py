@@ -85,7 +85,7 @@ class AccountAnalyticTagSegmentationControl(models.Model):
     invoice_date =  fields.Date('Fecha de Factura', related="invoice_id.invoice_date", store=True)
     currency_id = fields.Many2one('res.currency', 'Moneda', related="invoice_id.currency_id", store=True)
     percentage = fields.Float('Porcentaje', digits=(14,6))
-    amount = fields.Float('Monto', digits=(14,2))
+    amount = fields.Float('Monto', digits=(14,6))
     # total = fields.Monetary('Total', related="invoice_id.amount_untaxed", store=True)
     total = fields.Monetary('Total', compute="_get_subtotal_from_currency", store=True)
 
@@ -157,15 +157,20 @@ class AccountAnalyticTagSegmentationWizard(models.TransientModel):
 
     @api.depends('invoice_id')
     def _get_subtotal_from_currency(self):
+        _logger.info("\n::::::::::::: _get_subtotal_from_currency >>>>>>>>> ")
         company = self.env.user.company_id
         company_currency = company.currency_id
         invoice_currency = self.invoice_id.currency_id
+        _logger.info("\n######### company_currency >>>>>>>>> %s" % company_currency)
+        _logger.info("\n######### invoice_currency >>>>>>>>> %s" % invoice_currency)
         if invoice_currency.id == company_currency.id:
             self.subtotal = self.invoice_id.amount_untaxed
         else:
-            ctx = dict(self._context, date=self.invoice_id.invoice_date)
-            compute_currency = company_currency.with_context(ctx).compute(self.invoice_id.amount_untaxed, invoice_currency)
-            self.subtotal = compute_currency
+            total_comp_curr = invoice_currency._convert(self.invoice_id.amount_untaxed, company_currency, company, self.invoice_id.invoice_date)
+
+            # ctx = dict(self._context, date=self.invoice_id.invoice_date)
+            # compute_currency = company_currency.with_context(ctx).compute(self.invoice_id.amount_untaxed, invoice_currency)
+            self.subtotal = total_comp_curr
 
     @api.depends('segmentation_line_ids')
     def _get_total_percentage(self):
@@ -302,7 +307,7 @@ class AccountAnalyticTagSegmentationWizardLine(models.TransientModel):
 
     currency_id = fields.Many2one('res.currency', 'Moneda', related="wizard_id.currency_id", store=True)
 
-    amount = fields.Monetary('Monto')
+    amount = fields.Monetary('Monto', digits=(14,6))
 
     # account_analytic_id = fields.Many2one('account.analytic.account', 'Cuenta Analítica')
 
