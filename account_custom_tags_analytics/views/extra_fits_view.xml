@@ -61,7 +61,7 @@
                             <field name="invoice_date" />
                             <!-- <field name="currency_id" groups="base.group_multi_currency"/> -->
                             <field name="percentage" sum="Porcentaje"/>
-                            <field name="amount" sum="Porcentaje"/>
+                            <field name="amount" sum="Total"/>
                             <field name="total" />
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="last_write_date" />
