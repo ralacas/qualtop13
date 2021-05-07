@@ -36,7 +36,7 @@ class AccountAnalyticTag(models.Model):
                 monto_total += line.amount
             rec.distr_subtotal_sum = monto_total
 
-    distr_subtotal_sum = fields.Monetary('Monto Total', compute="_get_subtotal_from_currency", digits=(14,2))
+    distr_subtotal_sum = fields.Float('Monto Total', compute="_get_subtotal_from_currency", digits=(14,2))
 
     segmentation_tag = fields.Boolean('Segmentación',  
                                       help='Indica que esta etiqueta generara información Analitica dentro de las Facturas.', )
