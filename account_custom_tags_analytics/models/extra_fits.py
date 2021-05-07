@@ -110,7 +110,7 @@ class AccountAnalyticTagSegmentationControl(models.Model):
         for rec in self:
             invoice_currency = rec.invoice_id.currency_id
             if invoice_currency.id == company_currency.id:
-                rec.subtotal = rec.invoice_id.amount_untaxed
+                rec.total = rec.invoice_id.amount_untaxed
             else:
                 total_comp_curr = invoice_currency._convert(rec.invoice_id.amount_untaxed, company_currency, company, rec.invoice_id.invoice_date)
                 rec.total = total_comp_curr
