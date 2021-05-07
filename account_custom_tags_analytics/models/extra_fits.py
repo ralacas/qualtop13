@@ -27,6 +27,17 @@ class AccountAnalyticTag(models.Model):
     _name = 'account.analytic.tag'
     _inherit ='account.analytic.tag'
 
+    @api.depends('segmentation_control_ids')
+    def _get_subtotal_from_currency(self):
+        _logger.info("\n::::::::::::: _get_subtotal_from_currency >>>>>>>>> ")
+        for rec in self:
+            monto_total = 0.0
+            for line in rec.segmentation_control_ids:
+                monto_total += line.amount
+            rec.distr_subtotal_sum = monto_total
+
+    distr_subtotal_sum = fields.Monetary('Monto Total', compute="_get_subtotal_from_currency", digits=(14,2))
+
     segmentation_tag = fields.Boolean('Segmentación',  
                                       help='Indica que esta etiqueta generara información Analitica dentro de las Facturas.', )
 
@@ -41,6 +52,39 @@ class AccountAnalyticTag(models.Model):
 class AccountMove(models.Model):
     _name = 'account.move'
     _inherit ='account.move'
+
+    @api.depends('amount_untaxed')
+    def _get_subtotal_from_currency(self):
+        _logger.info("\n::::::::::::: _get_subtotal_from_currency >>>>>>>>> ")
+        for rec in self:
+            company = self.env.user.company_id
+            company_currency = company.currency_id
+            invoice_currency = rec.currency_id
+            _logger.info("\n######### company_currency >>>>>>>>> %s" % company_currency)
+            _logger.info("\n######### invoice_currency >>>>>>>>> %s" % invoice_currency)
+            if invoice_currency.id == company_currency.id:
+                rec.distr_subtotal_sum = rec.amount_untaxed
+            else:
+                total_comp_curr = invoice_currency._convert(rec.amount_untaxed, company_currency, company, rec.invoice_date)
+                _logger.info("\n######### total_comp_curr >>>>>>>>> %s" % total_comp_curr)
+                rec.distr_subtotal_sum = total_comp_curr
+
+    @api.depends('segmentation_control_ids')
+    def _get_total_percentage(self):
+        for rec in self:
+            percentage_sum = 0.0
+            for line in rec.segmentation_control_ids:
+                percentage_sum += line.percentage
+            #### Redondeo ####
+            percentage_sum = round(percentage_sum, 2) 
+            if percentage_sum > 100.00:
+                percentage_sum = 100.00
+            rec.distr_percentage_sum = percentage_sum
+
+    distr_subtotal_sum = fields.Monetary('Subtotal', compute="_get_subtotal_from_currency", digits=(14,2))
+
+    distr_percentage_sum = fields.Monetary('Porcentaje', compute="_get_total_percentage", digits=(14,2))
+
 
     segmentation_control_ids = fields.One2many('account.analytic.tag.segmentation.control', 'invoice_id',
                                                'Lineas Segmentación')
@@ -69,7 +113,7 @@ class AccountAnalyticTagSegmentationControl(models.Model):
                 rec.subtotal = rec.invoice_id.amount_untaxed
             else:
                 total_comp_curr = invoice_currency._convert(rec.invoice_id.amount_untaxed, company_currency, company, rec.invoice_id.invoice_date)
-                rec.subtotal = total_comp_curr
+                rec.total = total_comp_curr
                 # ctx = dict(self._context, date=rec.invoice_id.invoice_date)
                 # compute_currency = company_currency.with_context(ctx).compute(rec.invoice_id.amount_untaxed, invoice_currency)
                 # rec.subtotal = compute_currency

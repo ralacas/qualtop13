@@ -34,14 +34,20 @@
                         <field name="partner_id" />
                         <field name="invoice_date" />
                         <!-- <field name="currency_id" groups="base.group_multi_currency"/> -->
-                        <field name="percentage" sum="Porcentaje"/>
-                        <field name="amount" sum="Total"/>
+                        <field name="percentage" />
+                        <field name="amount" />
                         <field name="total" />
                         <field name="company_id" groups="base.group_multi_company"/>
                         <field name="last_write_date" />
                         <field name="last_write_user" />
                     </tree>
                 </field>
+                <group class="oe_right">
+                    <group class="oe_subtotal_footer" >
+                        <field name="distr_subtotal_sum"/>
+                    </group>
+                    <newline/>
+                </group>
             </xpath>
         </field>
     </record>
@@ -53,21 +59,30 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page string="Segmentación" attrs="{'invisible':[('segmentation_control','=',False)]}">
-                    <field name="segmentation_control" invisible="1"/>
-                    <field name="segmentation_control_ids" readonly="1" attrs="{'invisible':[('segmentation_control','=',False)]}">
-                        <tree string="Segmentación" editable="bottom">
-                            <field name="tag_id" />
-                            <field name="account_analytic_id" />
-                            <field name="invoice_date" />
-                            <!-- <field name="currency_id" groups="base.group_multi_currency"/> -->
-                            <field name="percentage" sum="Porcentaje"/>
-                            <field name="amount" sum="Total"/>
-                            <field name="total" />
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="last_write_date" />
-                            <field name="last_write_user" />
-                        </tree>
-                    </field>
+                    <group>
+                        <field name="segmentation_control" invisible="1"/>
+                        <field name="segmentation_control_ids" readonly="1" attrs="{'invisible':[('segmentation_control','=',False)]}" nolabel="1">
+                            <tree string="Segmentación" editable="bottom">
+                                <field name="tag_id" />
+                                <field name="account_analytic_id" />
+                                <field name="invoice_date" />
+                                <!-- <field name="currency_id" groups="base.group_multi_currency"/> -->
+                                <field name="percentage"/>
+                                <field name="amount"/>
+                                <field name="total" />
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="last_write_date" />
+                                <field name="last_write_user" />
+                            </tree>
+                        </field>
+                    </group>
+                    <group class="oe_right">
+                        <group class="oe_subtotal_footer" >
+                            <field name="distr_percentage_sum"/>
+                            <field name="distr_subtotal_sum"/>
+                        </group>
+                        <newline/>
+                    </group>
 
                 </page>
             </notebook>
