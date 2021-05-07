@@ -189,7 +189,7 @@ class AccountAnalyticTagSegmentationWizard(models.TransientModel):
     #subtotal = fields.Monetary('Subtotal', related="invoice_id.amount_untaxed", store=True)
     subtotal = fields.Monetary('Subtotal', compute="_get_subtotal_from_currency", store=True)
 
-    percentage_sum = fields.Monetary('Subtotal', compute="_get_total_percentage", digits=(14,2))
+    percentage_sum = fields.Monetary('Porcentaje', compute="_get_total_percentage", digits=(14,2))
 
     currency_id = fields.Many2one('res.currency', 'Moneda', related="invoice_id.currency_id", store=True)
 
