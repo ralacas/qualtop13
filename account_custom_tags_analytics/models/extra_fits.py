@@ -252,9 +252,9 @@ class AccountAnalyticTagSegmentationWizard(models.TransientModel):
         for line in self.segmentation_line_ids:
             amount_sum += line.amount
             amount_percentage += line.percentage
-        if amount_percentage > 100.0:
+        if amount_percentage > 100.01:
             raise UserError("El Porcentaje asignado supera el 100%")
-        if amount_percentage < 100.0:
+        if amount_percentage < 99.99:
             raise UserError("El Porcentaje asignado debe ser del 100%")
         _logger.info("\n######### amount_sum >>>>>>>>> %s" % amount_sum)
         _logger.info("\n######### invoice_subtotal >>>>>>>>> %s" % invoice_subtotal)
