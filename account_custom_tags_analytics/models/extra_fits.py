@@ -169,7 +169,7 @@ class AccountAnalyticTagSegmentationWizard(models.TransientModel):
             self.subtotal = self.invoice_id.amount_untaxed
         else:
             total_comp_curr = invoice_currency._convert(self.invoice_id.amount_untaxed, company_currency, company, self.invoice_id.invoice_date)
-
+            _logger.info("\n######### total_comp_curr >>>>>>>>> %s" % total_comp_curr)
             # ctx = dict(self._context, date=self.invoice_id.invoice_date)
             # compute_currency = company_currency.with_context(ctx).compute(self.invoice_id.amount_untaxed, invoice_currency)
             self.subtotal = total_comp_curr
