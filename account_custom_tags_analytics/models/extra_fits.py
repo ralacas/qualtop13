@@ -289,7 +289,7 @@ class AccountAnalyticTagSegmentationWizardLine(models.TransientModel):
 
     tag_id = fields.Many2one('account.analytic.tag', 'Etiqueta Analítica')
 
-    percentage = fields.Float('Porcentaje', digits=(14,2))
+    percentage = fields.Float('Porcentaje', digits=(14,6))
 
     currency_id = fields.Many2one('res.currency', 'Moneda', related="wizard_id.currency_id", store=True)
 
