@@ -87,7 +87,7 @@ class AccountAnalyticTagSegmentationControl(models.Model):
     invoice_date =  fields.Date('Fecha de Factura', related="invoice_id.invoice_date", store=True)
     currency_id = fields.Many2one('res.currency', 'Moneda', related="invoice_id.currency_id", store=True)
     percentage = fields.Float('Porcentaje', digits=(14,6))
-    amount = fields.Float('Monto', digits=(14,6))
+    amount = fields.Float('Monto', digits=(14,2))
     # total = fields.Monetary('Total', related="invoice_id.amount_untaxed", store=True)
     total = fields.Monetary('Total', compute="_get_subtotal_from_currency", store=True)
 
@@ -309,7 +309,7 @@ class AccountAnalyticTagSegmentationWizardLine(models.TransientModel):
 
     currency_id = fields.Many2one('res.currency', 'Moneda', related="wizard_id.currency_id", store=True)
 
-    amount = fields.Monetary('Monto', digits=(14,6))
+    amount = fields.Monetary('Monto', digits=(14,2))
 
     # account_analytic_id = fields.Many2one('account.analytic.account', 'Cuenta Analítica')
 
