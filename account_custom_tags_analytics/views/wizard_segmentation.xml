@@ -39,7 +39,7 @@
                             <field name="segmentation_line_ids" force_save="1" nolabel="1">
                                 <tree string="Distribución" create="false" delete="false" editable="bottom">
                                     <field name="tag_id" force_save="1" readonly="1"/>
-                                    <field name="percentage" required="1" string="%" force_save="1" sum="Total"/>
+                                    <field name="percentage" required="1" string="%" force_save="1"/>
                                     <field name="amount" required="1" force_save="1"/>
                                 </tree>
                             </field>
@@ -54,6 +54,7 @@
                             </group> -->
                         <group class="oe_right">
                             <group class="oe_subtotal_footer" >
+                                <field name="percentage_sum"/>
                                 <field name="subtotal"/>
                             </group>
                             <newline/>

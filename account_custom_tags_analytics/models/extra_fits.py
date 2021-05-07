@@ -166,8 +166,15 @@ class AccountAnalyticTagSegmentationWizard(models.TransientModel):
             ctx = dict(self._context, date=self.invoice_id.invoice_date)
             compute_currency = company_currency.with_context(ctx).compute(self.invoice_id.amount_untaxed, invoice_currency)
             self.subtotal = compute_currency
-    
 
+    @api.depends('segmentation_line_ids')
+    def _get_total_percentage(self):
+        for rec in self:
+            percentage_sum = 0.0
+            for line in rec.segmentation_line_ids:
+                percentage_sum += line.percentage
+            rec.percentage_sum = percentage_sum
+    
 
     invoice_id = fields.Many2one('account.move', 'Factura')
     segmentation_line_ids = fields.One2many('account.analytic.tag.segmentation.wizard.line', 'wizard_id',
@@ -181,6 +188,8 @@ class AccountAnalyticTagSegmentationWizard(models.TransientModel):
 
     #subtotal = fields.Monetary('Subtotal', related="invoice_id.amount_untaxed", store=True)
     subtotal = fields.Monetary('Subtotal', compute="_get_subtotal_from_currency", store=True)
+
+    percentage_sum = fields.Monetary('Subtotal', compute="_get_total_percentage", digits=(14,2))
 
     currency_id = fields.Many2one('res.currency', 'Moneda', related="invoice_id.currency_id", store=True)
 
